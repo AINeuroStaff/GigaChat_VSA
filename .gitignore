@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Логи и временные файлы
+*.log
+*.tmp
+
+# Твои версии проекта
+Ver_0.0/
+Ver_1.0/
+Ver_2.0/
+Ver_3.0/
+
+
+# Дополнительная информация
+.streamlit/
+.vscode/
+assets/
+Certificate_HTTPS_Connect/
+Streamlit_study/
+
+# Конкретный файл с бэклогом
+БэкЛог по проекту GigaChat_for_VSA.txt
