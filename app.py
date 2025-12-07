@@ -120,6 +120,29 @@ def render_sidebar() -> None:
         f"**Версия:** {PROJECT_VERSION}"
     )
 
+# --- ПОДВАЛ СТРАНИЦЫ ---
+    st.sidebar.markdown(
+        """
+        <div style="font-size: 12px; color: #666; margin-top: 8px;">
+            <div>2025 · © Дубинин Владимир</div>
+            <div>ОГРНИП 325180000101289</div>
+            <div>г. Старый Оскол</div>
+            <div style="margin-top: 6px;">
+                Сайт продукта:<br>
+                <a href="http://solution-architect.tilda.ws/" target="_blank">
+                    VSA — AI-агент в мире кодинга
+                </a>
+            </div>
+            <div style="margin-top: 4px;">
+                Обратная связь:<br>
+                <a href="https://t.me/AI_Services_VSA" target="_blank">
+                    Команда разработки
+                </a>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 def render_chat() -> None:
     """Отрисовка основной зоны чата: история, ввод, вызов модели."""
@@ -161,6 +184,7 @@ def render_chat() -> None:
     # Поле ввода сообщения пользователя
     user_input: str | None = st.chat_input("Введите сообщение")
 
+
     if user_input:
         # Очистить предыдущую ошибку
         set_error(None)
@@ -198,6 +222,7 @@ def render_chat() -> None:
         # Добавить ответ ассистента в историю
         add_message("assistant", reply_text)
         st.session_state.is_thinking = False
+
 
 
 def main() -> None:
