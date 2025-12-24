@@ -1,7 +1,9 @@
 """
 Проект: GigaChat_for_VSA
-Версия: 3.1
-Cтатус: Доработана подстановка системного промта и выбор модели GigaChat-2 / GigaChat-2-Pro / GigaChat-2-Max
+Версия: 4.0
+Статус: Подстановка системного промта из .txt файла, выбор модели GigaChat-2 / GigaChat-2-Pro / GigaChat-2-Max
+        и разбор JSON-ответа (answer.user).
+
 Модуль: app.py
 Разработчик: GEN AI + @AI_NeuroStaff / Dubinin Vladimir
 

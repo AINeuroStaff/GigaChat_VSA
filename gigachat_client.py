@@ -1,7 +1,9 @@
 """
 Проект: GigaChat_for_VSA
-Версия: 3.1
-Cтатус: Доработана подстановка системного промта и выбор модели GigaChat-2 / GigaChat-2-Pro / GigaChat-2-Max
+Версия: 4.0
+Статус: Подстановка системного промта из .txt файла, выбор модели GigaChat-2 / GigaChat-2-Pro / GigaChat-2-Max
+        и разбор JSON-ответа (answer.user).
+
 Модуль: gigachat_client.py
 Разработчик: GEN AI + @AI_NeuroStaff / Dubinin Vladimir
 
@@ -43,6 +45,7 @@ Cтатус: Доработана подстановка системного п
 
 from typing import List, Dict, Optional
 import os
+import json
 
 import requests  # Для блока проверки сертификата
 
@@ -148,7 +151,6 @@ def _create_client() -> GigaChat:
 
     # --- БЛОК ПРОВЕРКИ СЕРТИФИКАТА ---
     test_url = "https://gigachat.devices.sberbank.ru"
-
     try:
         requests.get(test_url, timeout=5, verify=ca_bundle_file)
     except requests.exceptions.SSLError as ssl_err:
@@ -168,6 +170,7 @@ def _create_client() -> GigaChat:
         ca_bundle_file=ca_bundle_file,
         verify_ssl_certs=True,
     )
+
     return client
 
 
@@ -185,6 +188,9 @@ def generate_reply(
     - system_prompt: дополнительный системный промпт.
     - model_name: имя модели ("GigaChat-2", "GigaChat-2-Pro", "GigaChat-2-Max").
       Если не указано, берётся модель из настроек (_resolve_settings()).
+
+    Возвращает:
+    - reply_text: строка, которая пойдёт в UI (answer.user, если пришёл JSON).
     """
     if model_params is None:
         model_params = DEFAULT_MODEL_PARAMS.copy()
@@ -230,6 +236,24 @@ def generate_reply(
 
     client = _create_client()
     response = client.chat(payload)
-    reply_text = response.choices[0].message.content
+
+    # Оригинальный текст от модели
+    raw_content = response.choices[0].message.content
+
+    # Ожидаемый формат:
+    # {
+    #   "answer": {
+    #     "reasoning": "длинный текст...",
+    #     "user": "длинный текст..."
+    #   }
+    # }
+    try:
+        data = json.loads(raw_content)
+        reply_text = (
+            data.get("answer", {}).get("user")
+            or raw_content  # fallback, если структура не совпала
+        )
+    except (json.JSONDecodeError, TypeError):
+        reply_text = raw_content
 
     return reply_text
